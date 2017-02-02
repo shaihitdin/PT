@@ -183,6 +183,7 @@ namespace SHAIKH_manager
                     else
                     {
                         Console.WriteLine("\nCommand is unknown, press any character to continue");
+                        Console.ReadKey();
                     }
                     command = "";
                 }
