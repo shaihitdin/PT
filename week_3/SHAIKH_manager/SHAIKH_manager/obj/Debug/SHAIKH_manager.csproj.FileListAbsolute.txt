@@ -1,0 +1,6 @@
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Debug\SHAIKH_manager.exe.config
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\obj\Debug\SHAIKH_manager.csprojResolveAssemblyReference.cache
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Debug\SHAIKH_manager.exe
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Debug\SHAIKH_manager.pdb
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\obj\Debug\SHAIKH_manager.exe
+c:\users\shaih_000\documents\visual studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\obj\Debug\SHAIKH_manager.pdb
