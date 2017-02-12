@@ -1,0 +1,5 @@
+C:\Users\shaih_000\Documents\Visual Studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Release\SHAIKH_manager.exe.config
+C:\Users\shaih_000\Documents\Visual Studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Release\SHAIKH_manager.exe
+C:\Users\shaih_000\Documents\Visual Studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\bin\Release\SHAIKH_manager.pdb
+C:\Users\shaih_000\Documents\Visual Studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\obj\Release\SHAIKH_manager.exe
+C:\Users\shaih_000\Documents\Visual Studio 2015\Projects\SHAIKH_manager\SHAIKH_manager\obj\Release\SHAIKH_manager.pdb

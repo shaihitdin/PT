@@ -17,7 +17,7 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. 
+ * SOFTWARE.
  */
 
 using System;
@@ -87,7 +87,7 @@ namespace SHAIKH_manager
                 string destFile = Path.Combine(to.FullName, from.GetFileSystemInfos()[i].Name);
                 if (selected[i] == 0)
                     continue;
-                if (from.GetFileSystemInfos()[i].GetType() == typeof (FileInfo))
+                if (from.GetFileSystemInfos()[i].GetType() == typeof(FileInfo))
                 {
                     File.Copy(sourceFile, destFile, true);
                 }
@@ -98,12 +98,15 @@ namespace SHAIKH_manager
                     int[] selected2 = new int[1000];
                     for (int j = 0; j < 1000; ++j)
                         selected2[j] = 1;
-                    Copy(new DirectoryInfo (sourceFile), new DirectoryInfo (destFile), selected2);
+                    Copy(new DirectoryInfo(sourceFile), new DirectoryInfo(destFile), selected2);
                 }
             }
         }
-        static void Make_Move (DirectoryInfo[] dir, int[] ps , int[] start, int cursor, ConsoleKeyInfo a)
+        static void Make_Move(DirectoryInfo[] dir, int[] ps, int[] start, int cursor, ConsoleKeyInfo a, int[][] selected)
         {
+            int[] old_ps = new int[2];
+            old_ps[0] = ps[0];
+            old_ps[1] = ps[1];
             if (a.Key == ConsoleKey.UpArrow)
                 Move(dir, ps, start, cursor, -1);
             if (a.Key == ConsoleKey.DownArrow)
@@ -114,6 +117,78 @@ namespace SHAIKH_manager
             if (a.Key == ConsoleKey.PageDown)
                 for (int i = 0; i < 52; ++i)
                     Move(dir, ps, start, cursor, +1);
+            Console.SetCursorPosition(0, old_ps[cursor]);
+            for (int j = 0; j < 2; ++j)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("|");
+                Print(dir[j], j, old_ps[cursor], Convert.ToInt32(cursor == j), ps[j], start[j], selected[j]);
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("|");
+            }
+            Console.SetCursorPosition(0, ps[cursor]);
+            for (int j = 0; j < 2; ++j)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("|");
+                Print(dir[j], j, ps[cursor], Convert.ToInt32(cursor == j), ps[j], start[j], selected[j]);
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("|");
+            }
+        }
+        static bool IsItAFile (DirectoryInfo dir)
+        {
+            FileInfo cur = new FileInfo(dir.FullName);
+            if (cur.Exists)
+                return true;
+            else
+                return false;
+        }
+        static void Reprint(DirectoryInfo[] dir, int cursor, int[] state, int[] start, int[][] selected, string command)
+        {
+            //In case if we are in file
+            if (IsItAFile (dir[cursor]))
+            {
+                //Print file fully
+                StreamReader f_inside = new StreamReader(dir[cursor].FullName);
+                for (int i = 0; i + 2 < Console.WindowHeight; ++i)
+                {
+                    String x = f_inside.ReadLine();
+                    x += " ";
+                    while (x.Length > Console.WindowWidth - 6)
+                        x = x.Remove(x.Length - 1);
+                    while (x.Length < Console.WindowWidth - 6)
+                        x += " ";
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(x);
+                }
+                f_inside.Close();
+                return;
+            }
+
+            for (int i = 0; i + 2 < Console.WindowHeight; ++i)
+            {
+                for (int j = 0; j < 2; ++j)
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("|");
+                    Print(dir[j], j, i, Convert.ToInt32(cursor == j), state[j], start[j], selected[j]);
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("|");
+                }
+                Console.Write("\n");
+            }
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(dir[cursor].FullName + ">");
+            Console.Write(command);
         }
 
         static void Main(string[] args)
@@ -121,51 +196,54 @@ namespace SHAIKH_manager
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             Console.Clear();
             DirectoryInfo[] dir = new DirectoryInfo[2]; //First and second windows directories
-            dir[0] = new DirectoryInfo (@"C:\");
-            dir[1] = new DirectoryInfo (@"C:\");
+            dir[0] = new DirectoryInfo(@"C:\");
+            dir[1] = new DirectoryInfo(@"C:\");
             string command = ""; /// Command that you have written
             const int N = 1000;
             int[] state = new int[2]; // Cursor position (counts from start pos)
             int[][] selected = new int[2][]; // Files that have been selected
             selected[0] = new int[N];
             selected[1] = new int[N];
-            int[] start = new int[2];
+            int[] start = new int[2]; // line number
             int cursor = 0; //On which side you are
             start[0] = start[1] = -1;
+            Console.ReadKey();
+
             while (true)
             {
-                // Print directories
+
+                // Print directories fully
                 Console.Clear();
-                for (int i = 0; i + 2 < Console.WindowHeight; ++i)
+                Reprint(dir, cursor, state, start, selected, command);
+                simple_move: ;
+                if (IsItAFile(dir[cursor]))
                 {
-                    for (int j = 0; j < 2; ++j)
+                    while (true)
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkBlue;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("|");
-                        Print(dir[j], j, i, Convert.ToInt32(cursor == j), state[j], start[j], selected[j]);
-                        Console.BackgroundColor = ConsoleColor.DarkBlue;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("|");
+
+                        ConsoleKeyInfo typed1 = Console.ReadKey();
+                        if (typed1.Key == ConsoleKey.Escape)
+                        {
+                            dir[cursor] = dir[cursor].Parent;
+                            break;
+                        }
+
                     }
-                    Console.Write("\n");
+                    continue;
                 }
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(dir[cursor].FullName + ">");
-                Console.Write(command);
                 ConsoleKeyInfo typed = Console.ReadKey();
+
                 if (typed.Key == ConsoleKey.Enter && command.Length == 0) //Enter directory
                 {
-                        if (start[cursor] + state[cursor] == -1)
-                        {
-                            if (dir[cursor].Parent != null)
-                                dir[cursor] = dir[cursor].Parent;
-                        }
-                        else
-                        {
-                            dir[cursor] = new DirectoryInfo (dir[cursor].GetFileSystemInfos()[state[cursor] + start[cursor]].FullName);
-                        }
+                    if (start[cursor] + state[cursor] == -1)
+                    {
+                        if (dir[cursor].Parent != null)
+                            dir[cursor] = dir[cursor].Parent;
+                    }
+                    else
+                    {
+                        dir[cursor] = new DirectoryInfo(dir[cursor].GetFileSystemInfos()[state[cursor] + start[cursor]].FullName);
+                    }
                     state[cursor] = 0;
                     start[cursor] = -1;
                     for (int i = 0; i < N; ++i)
@@ -176,7 +254,7 @@ namespace SHAIKH_manager
                 {
                     if (command == "COPY")
                     {
-                        Copy(dir[cursor], dir[cursor^1], selected[cursor]);
+                        Copy(dir[cursor], dir[cursor ^ 1], selected[cursor]);
                         for (int i = 0; i < N; ++i)
                             selected[cursor][i] = 0;
                     }
@@ -191,23 +269,39 @@ namespace SHAIKH_manager
                 {
                     cursor ^= 1;
                 }
-                else if (typed.Modifiers == ConsoleModifiers.Shift && (typed.Key == ConsoleKey.UpArrow || typed.Key == ConsoleKey.DownArrow 
-                    || 
+                else if (typed.Modifiers == ConsoleModifiers.Shift && (typed.Key == ConsoleKey.UpArrow || typed.Key == ConsoleKey.DownArrow
+                    ||
                     typed.Key == ConsoleKey.PageUp || typed.Key == ConsoleKey.PageDown))
                 {
+                    int[] to_reprint = new int[2];
+                    int[] old_save = new int[2];
+                    old_save[0] = start[0];
+                    old_save[1] = start[1];
                     selected[cursor][start[cursor] + state[cursor]] ^= 1;
-                    Make_Move(dir, state, start, cursor, typed);
+                    Make_Move(dir, state, start, cursor, typed, selected);
+                    if (old_save[0] == start[0] && old_save[1] == start[1])
+                    {
+                        goto simple_move;
+                    }
                 }
                 else if ((typed.Key == ConsoleKey.UpArrow || typed.Key == ConsoleKey.DownArrow
-                    || 
+                    ||
                     typed.Key == ConsoleKey.PageUp || typed.Key == ConsoleKey.PageDown))
                 {
-                    Make_Move(dir, state, start, cursor, typed);
+                    int[] to_reprint = new int[2];
+                    int[] old_save = new int[2];
+                    old_save[0] = start[0];
+                    old_save[1] = start[1];
+                    Make_Move(dir, state, start, cursor, typed, selected);
+                    if (old_save[0] == start[0] && old_save[1] == start[1])
+                    {
+                        goto simple_move;
+                    }
                 }
                 else if (typed.Key == ConsoleKey.Backspace)
                 {
                     if (command.Length > 0)
-                    command = command.Remove(command.Length - 1);
+                        command = command.Remove(command.Length - 1);
                 }
                 else
                 {
