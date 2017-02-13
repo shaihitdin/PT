@@ -1,0 +1,6 @@
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\bin\Debug\Snake.exe.config
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\bin\Debug\Snake.exe
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\bin\Debug\Snake.pdb
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\obj\Debug\Snake.csprojResolveAssemblyReference.cache
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\obj\Debug\Snake.exe
+c:\users\s_nezametdinov\documents\visual studio 2013\Projects\Snake\Snake\obj\Debug\Snake.pdb
