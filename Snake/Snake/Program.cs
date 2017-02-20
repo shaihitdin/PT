@@ -38,8 +38,30 @@ namespace Snake
                 {
                     break;
                 }
-                if (step % 10 == 0)
-                    snake.body.Add(new Point (0, 0));
+                foreach (Point a in wall.body)
+                {
+                    if (a.x == snake.body[0].x && a.y == snake.body[0].y)
+                    {
+
+                        Console.Clear();
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Clear();
+                        for (int i = 0; i < Console.WindowHeight - 1; ++i)
+                        {
+                            Console.WriteLine("Game over");
+                        }
+                            while (true)
+                            {
+                                Console.ReadKey();
+                            }
+                    }
+                }
+                if (food.a.x == snake.body[0].x && food.a.y == snake.body[0].y)
+                {
+                    snake.body.Add(new Point(0, 0));
+                    food = new Food();
+                }
                 snake.Draw();
                 wall.Draw();
                 food.Draw();

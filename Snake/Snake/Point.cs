@@ -15,6 +15,5 @@ namespace Snake
             x = _x;
             y = _y;
         }
-
     }
 }

@@ -14,7 +14,7 @@ namespace Snake
         public Food() 
         {
             Random rnd = new Random();
-            a = new Point(Convert.ToInt32(rnd.Next()) % (Console.WindowWidth), Convert.ToInt32(rnd.Next()) % (Console.WindowHeight));
+            a = new Point(Convert.ToInt32(rnd.Next()) % (Console.WindowWidth - 5), Convert.ToInt32(rnd.Next()) % (Console.WindowHeight - 5));
         }
         public void Draw() 
         {

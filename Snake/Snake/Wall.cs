@@ -9,7 +9,7 @@ namespace Snake
 {
     class Wall
     {
-        List<Point> body;
+        public List<Point> body;
         public char sign = '0';
         public ConsoleColor color = ConsoleColor.Red;
         public Wall()
