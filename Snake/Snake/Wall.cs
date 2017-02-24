@@ -2,40 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 using System.IO;
 
-namespace Snake
+namespace Snuke
 {
     class Wall
     {
         public List<Point> body;
-        public char sign = '0';
-        public ConsoleColor color = ConsoleColor.Red;
-        public Wall()
+        public char sign = '#';
+        public ConsoleColor color = ConsoleColor.DarkRed;
+        public Wall() 
         {
-            StreamReader sr = new StreamReader("wall.txt");
-            int n = int.Parse(sr.ReadLine());
             body = new List<Point>();
-            for (int i = 0; i < n; ++i)
-            {
-                String s = sr.ReadLine();
-                for (int j = 0; j < s.Length; ++j)
-                {
-                    if (s[j] == '*')
+        }
+        public Wall(List<Point> elements) 
+        {
+            body = elements;
+        }
+        public Wall(StreamReader f) 
+        {
+            body = new List<Point>();
+            string[] s = f.ReadLine().Split();
+            int n = int.Parse(s[0]), m = int.Parse(s[1]);
+            for (int i = 0; i < n; ++i) {
+                string x = f.ReadLine();
+                for (int j = 0; j < m; ++j) {
+                    if (x[j] == sign) {
                         body.Add(new Point(j, i));
+                    }                                        
                 }
             }
         }
-        public void Draw()
-        {
-            //Console.Clear();
-            Console.ForegroundColor = this.color;
-            foreach (Point p in this.body)
-            {
-                Console.SetCursorPosition(p.x, p.y);
-                Console.Write(sign);
-            }
+        public void Draw() {
+            new Drawing(body, color, sign).use_coloring();
         }
     }
 }

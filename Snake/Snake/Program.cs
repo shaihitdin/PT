@@ -2,71 +2,101 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
+using System.IO;
+using System.Threading;
 
-namespace Snake
+namespace Snuke
 {
     class Program
     {
+        static int d = 0;
+        static Point move = new Point (0, 0);
+        static Snake snake = new Snake();
+        static bool intersection_check(List <Point> body1, List <Point> body2) {
+            for (int i = 0; i < body2.Count; ++i) {
+                if (body2[i].x == body1[0].x && body2[i].y == body1[0].y)
+                    return true;
+            }
+            return false;
+        }
+        static public void move_maker() {
+            while (1 != 0)
+            {
+                if (d < 4)
+                {
+                    snake.move_maker(move);
+                    Thread.Sleep(50 - snake.body.Count);
+                }
+                else
+                {
+                    while (1 != 0)
+                    {
+                        ConsoleKeyInfo s = Console.ReadKey();
+                        if (s.Key == ConsoleKey.Escape)
+                            break;
+                    }
+                }
+            }
+        }
         static void Main(string[] args)
         {
-            Wall wall = new Wall();
-            Snake snake = new Snake();
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Wall wall = new Wall(new StreamReader("wall.txt"));
             Food food = new Food();
-            String[] s = new String[50];
-            
-            for (int step = 1; true; ++step)
-            {
+            Thread thread = new Thread(move_maker);
+            thread.Start();
+            while (1 != 0) {
                 ConsoleKeyInfo pressed = Console.ReadKey();
                 if (pressed.Key == ConsoleKey.UpArrow)
                 {
-                    snake.Move(0, -1);
+                    move = new Point(0, -1);
+                    d = 0;
                 }
                 if (pressed.Key == ConsoleKey.DownArrow)
                 {
-                    snake.Move(0, 1);
+                    move = new Point(0, 1);
+                    d = 1;
                 }
                 if (pressed.Key == ConsoleKey.LeftArrow)
                 {
-                    snake.Move(-1, 0);
+                    move = new Point(-1, 0);
+                    d = 2;
                 }
                 if (pressed.Key == ConsoleKey.RightArrow)
                 {
-                    snake.Move(1, 0);
+                    move = new Point(1, 0);
+                    d = 3;
                 }
                 if (pressed.Key == ConsoleKey.Escape)
                 {
-                    break;
+                    d = 4;
                 }
-                foreach (Point a in wall.body)
-                {
-                    if (a.x == snake.body[0].x && a.y == snake.body[0].y)
+                if (intersection_check(snake.body, wall.body)) {
+                    Console.Clear();
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Clear();
+                    for (int i = 0; i < Console.WindowHeight - 1; ++i)
                     {
-
-                        Console.Clear();
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Clear();
-                        for (int i = 0; i < Console.WindowHeight - 1; ++i)
-                        {
-                            Console.WriteLine("Game over");
-                        }
-                            while (true)
-                            {
-                                Console.ReadKey();
-                            }
+                        Console.WriteLine("Game over");
                     }
+                    while (true)
+                    {
+                        Console.ReadKey();
+                    }                    
                 }
-                if (food.a.x == snake.body[0].x && food.a.y == snake.body[0].y)
-                {
-                    snake.body.Add(new Point(0, 0));
+                List<Point> Foody = new List<Point>();
+                Foody.Add(food.a);
+                if (intersection_check (snake.body, Foody)) {
+                    snake.Add();
                     food = new Food();
                 }
+                Console.Clear();
                 snake.Draw();
                 wall.Draw();
                 food.Draw();
             }
-
         }
     }
 }

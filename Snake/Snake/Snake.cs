@@ -2,34 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
 
-namespace Snake
+namespace Snuke
 {
     class Snake
     {
         public List<Point> body;
-        public char sign = '*';
-        public ConsoleColor color;
-        public int cnt;
-        public Snake()
-        {
+        public char sign = 'O';
+        public ConsoleColor color = ConsoleColor.Cyan;
+        public Snake() {
             body = new List<Point>();
-            body.Add(new Point(10, 10));
-            color = ConsoleColor.Yellow;
-            cnt = 1;
+            body.Add(new Point (20, 20));
         }
-        public void Move(int dx, int dy)
-        {
-            Console.SetCursorPosition(body[body.Count - 1].x, body[body.Count - 1].y);
-            Console.Write(" ");
-            for (int i = body.Count - 1; i > 0; --i)
-            {
-                body[i] = new Point(body[i - 1].x, body[i - 1].y);
+        public Snake(List<Point> body) {
+            this.body = body;
+        }
+        public void Add() {
+            body.Add(body.Last());
+        }
+        public void move_maker(Point d) {
+            for (int i = 0; i < Console.WindowHeight; ++i) {
+                Console.WriteLine(body.Count);
             }
-            body[0].x += dx;
-            body[0].y += dy;
+            Console.ReadKey();
+            new Drawing(body, ConsoleColor.Black, ' ').use_coloring();
+            for (int i = 1; i < body.Count; ++i)
+                body[i] = body[i - 1];
+            body[0].x += d.x;
+            body[0].y += d.y;
             if (body[0].x >= Console.WindowWidth - 3)
                 body[0].x = 1;
             if (body[0].x < 1)
@@ -38,20 +38,10 @@ namespace Snake
                 body[0].y = 1;
             if (body[0].y < 1)
                 body[0].y = Console.WindowHeight - 3;
-            if (++cnt % 10 == 0)
-                body.Add(new Point(0, 0));
+            new Drawing(body, color, sign).use_coloring();
         }
-
-        public void Draw()
-        {
-            //Console.Clear();
-            Console.ForegroundColor = color;
-            foreach (Point p in body)
-            {
-                Console.SetCursorPosition(p.x, p.y);
-                Console.Write(sign);
-            }
+        public void Draw() {
+            new Drawing(body, color, sign).use_coloring();
         }
-
     }
 }
